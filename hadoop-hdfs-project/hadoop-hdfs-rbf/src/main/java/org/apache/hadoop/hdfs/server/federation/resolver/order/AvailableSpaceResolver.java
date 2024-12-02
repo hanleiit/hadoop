@@ -116,8 +116,10 @@ public class AvailableSpaceResolver
   protected String chooseFirstNamespace(String path, PathLocation loc) {
     Map<String, SubclusterAvailableSpace> subclusterInfo =
         getSubclusterMapping();
-    List<SubclusterAvailableSpace> subclusterList = new LinkedList<>(
-        subclusterInfo.values());
+    List<SubclusterAvailableSpace> subclusterList = new LinkedList<>();
+    for(RemoteLocation remoteLocation : loc.getDestinations()) {
+        subclusterList.add(subclusterInfo.get(remoteLocation.getNameserviceId()));
+    }
     Collections.sort(subclusterList, comparator);
 
     return subclusterList.size() > 0 ? subclusterList.get(0).getNameserviceId()
